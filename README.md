@@ -87,24 +87,6 @@ https://Divakar2006.github.io/dork-studio-cosmos/
 
 ---
 
-## 🤝 Contributing
-
-Contributions welcome!
-
-1. Fork the repo
-2. Create a branch: `git checkout -b feat/your-feature`
-3. Commit: `git commit -m "feat: add ..."`
-4. Push and open a Pull Request
-
-Ideas:
-
-* Add more dork categories or refine queries
-* Add CSV / JSON export options
-* Add DuckDuckGo / Bing search support
-* Improve mobile responsiveness & accessibility
-
----
-
 ## 👤 Author
 
 **Divu** (Divakar) — bug hunter & recon enthusiast
