@@ -6,7 +6,7 @@
 
 ---
 
-## 📸 Demo 
+## 📸 Demo (place these images in `./images/`)
 
 ![Header Screenshot](./images/dork-1.png)
 ![Generator UI](./images/dork-2-use.png)
@@ -68,6 +68,15 @@ For live reload while editing:
 npm install -g http-server
 http-server -c-1
 # Open http://127.0.0.1:8080/dork-studio-cosmos.html
+```
+
+---
+
+## 📣  Click here for Direct access
+Direct link to the hosted version: (live)
+
+```
+https://Divakar2006.github.io/dork-studio-cosmos/
 ```
 
 ---
