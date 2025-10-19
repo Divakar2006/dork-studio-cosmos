@@ -6,7 +6,7 @@
 
 ---
 
-## 📸 Demo (place these images in `./images/`)
+## 📸 Demo 
 
 ![Header Screenshot](./images/dork-1.png)
 ![Generator UI](./images/dork-2-use.png)
