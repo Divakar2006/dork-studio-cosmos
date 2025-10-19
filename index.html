@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dork Studio Cosmos - Universe of Recon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0c0d1a;
+            --bg-secondary: #1a1b3a;
+            --text-primary: #e0e6ed;
+            --text-secondary: #a0a3b8;
+            --accent: #c77dff;
+            --accent-light: #e0aaff;
+            --success: #06ffa5;
+            --warning: #ffbe0b;
+            --danger: #fb5607;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- COSMIC BACKGROUND --- */
+        .cosmos-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: #000 url('https://www.transparenttextures.com/patterns/stardust.png'), radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            background-size: auto, cover;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative; z-index: 1;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px) saturate(150%);
+            -webkit-backdrop-filter: blur(8px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+        }
+
+        header {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .workspace {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        .input-panel, .results-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .results-panel .glass-card {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .results-panel h3 {
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        #results-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-button.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-button:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Source Code Pro', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a0a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 1em;
+        }
+
+        select option {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 10px;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(199, 125, 255, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: var(--bg-primary);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-success { background: var(--success); color: var(--bg-primary); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--warning); color: var(--bg-primary); }
+
+        .dork-builder-part {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .dork-builder-part select { flex: 1; }
+        .dork-builder-part input { flex: 2; }
+        
+        #results-container::-webkit-scrollbar { width: 8px; }
+        #results-container::-webkit-scrollbar-track { background: var(--bg-secondary); border-radius: 4px; }
+        #results-container::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+
+        .result-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .result-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(199, 125, 255, 0.2);
+        }
+        .result-dork { font-family: 'Source Code Pro', monospace; font-weight: 600; color: var(--warning); word-break: break-all; margin-bottom: 10px; }
+        .result-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .result-actions button { padding: 8px 15px; font-size: 0.9rem; }
+
+        .sidebar {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar h3 { color: var(--accent); margin-bottom: 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
+        .history-list, .favorites-list { list-style: none; max-height: 200px; overflow-y: auto; }
+        .history-list li, .favorites-list li {
+            background: var(--glass-bg);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .history-list li:hover, .favorites-list li:hover { background: rgba(199, 125, 255, 0.1); }
+        .history-list .query-text, .favorites-list .query-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .history-list .remove-btn, .favorites-list .remove-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .category-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            padding-left: 5px;
+            border-left: 3px solid var(--accent);
+            padding-left: 10px;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .sidebar-header h3 {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .sidebar-header button {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 1200px) {
+            .workspace { flex-direction: column; }
+            .sidebar { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- COSMIC BACKGROUND ELEMENTS -->
+    <div class="cosmos-bg"></div>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <main class="main-content">
+            <header class="glass-card">
+                <h1>Dork Studio Cosmos</h1>
+                <p class="subtitle">Universe of Vulnerability Reconnaissance</p>
+            </header>
+
+            <div class="workspace">
+                <div class="input-panel">
+                    <section class="glass-card">
+                        <div class="tabs">
+                            <button class="tab-button active" data-tab="preset">Vulnerability Dorks</button>
+                            <button class="tab-button" data-tab="builder">Dork Builder</button>
+                        </div>
+
+                        <!-- Preset Dorks Tab -->
+                        <div id="preset" class="tab-content active">
+                            <form id="dork-form-preset">
+                                <div class="form-group">
+                                    <label for="dork-type">Select Vulnerability Category</label>
+                                    <select id="dork-type" required>
+                                        <!-- Populated by JavaScript -->
+                                    </select>
+                                    <p id="category-description" class="category-description"></p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="target-domain">Target Domain</label>
+                                    <input type="text" id="target-domain" placeholder="example.com or sub.example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="dork-query">Additional Query (e.g., inurl:admin)</label>
+                                    <input type="text" id="dork-query" placeholder="Optional">
+                                </div>
+                                <div class="button-group">
+                                    <button type="submit" class="btn-primary">Generate Dorks</button>
+                                    <button type="button" id="export-md-btn" class="btn-secondary hidden">Export to Markdown</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Dork Builder Tab -->
+                        <div id="builder" class="tab-content">
+                            <form id="dork-form-builder">
+                                <div class="form-group">
+                                    <label>Build Your Dork</label>
+                                    <div class="dork-builder-part">
+                                        <select id="builder-operator">
+                                            <option value="">(None)</option>
+                                            <option value="inurl:">inurl:</option>
+                                            <option value="intitle:">intitle:</option>
+                                            <option value="intext:">intext:</option>
+                                            <option value="ext:">ext:</option>
+                                            <option value="filetype:">filetype:</option>
+                                            <option value="site:">site:</option>
+                                            <option value="inanchor:">inanchor:</option>
+                                            <option value="cache:">cache:</option>
+                                        </select>
+                                        <input type="text" id="builder-value" placeholder="e.g., wp-admin">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="builder-domain">Target Domain</label>
+                                    <input type="text" id="builder-domain" placeholder="example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="builder-extra">Extra Keywords (Optional)</label>
+                                    <input type="text" id="builder-extra" placeholder='"internal use" password'>
+                                </div>
+                                <div class="button-group">
+                                    <button type="submit" class="btn-primary">Generate Custom Dork</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="results-panel">
+                    <section class="glass-card">
+                        <h3>Generated Dorks</h3>
+                        <div id="results-container">
+                            <p style="color: var(--text-secondary); text-align: center; margin-top: 40px;">Your generated dorks will appear here.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="glass-card">
+                <div class="sidebar-header">
+                    <h3>Search History</h3>
+                    <button id="clear-history-btn" class="btn-danger">Clear All</button>
+                </div>
+                <ul id="history-list" class="history-list"></ul>
+            </div>
+            <div class="glass-card">
+                <h3>Favorites</h3>
+                <ul id="favorites-list" class="favorites-list"></ul>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Generate Starfield ---
+            const starsContainer = document.getElementById('stars');
+            const numberOfStars = 200;
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                const size = Math.random() * 2;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                starsContainer.appendChild(star);
+            }
+
+            // --- DOM Elements ---
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const presetForm = document.getElementById('dork-form-preset');
+            const builderForm = document.getElementById('dork-form-builder');
+            const dorkTypeSelect = document.getElementById('dork-type');
+            const categoryDescriptionP = document.getElementById('category-description');
+            const resultsContainer = document.getElementById('results-container');
+            const exportMdBtn = document.getElementById('export-md-btn');
+            const historyList = document.getElementById('history-list');
+            const favoritesList = document.getElementById('favorites-list');
+            const clearHistoryBtn = document.getElementById('clear-history-btn');
+
+            // --- Consolidated Dork Definitions ---
+            const dorkCategories = {
+                'injection': {
+                    name: 'A01: Injection (SQLi, RCE, etc.)',
+                    description: 'Finds vulnerable parameters for SQL Injection, RCE, and other injection attacks. Includes common parameter names and script names.',
+                    dorks: [
+                        "inurl:index.php?id=", "inurl:news.php?id=", "inurl:article.php?id=", "inurl:page.php?id=",
+                        "inurl:product.php?id=", "inurl:gallery.php?id=", "inurl:cat.php=", "inurl:profile.php?id=",
+                        "inurl:.php?id= intitle:\"index of\"", "inurl:.php?cat= intitle:\"index of\"",
+                        "inurl:exec.php", "inurl:cmd.php", "inurl:shell.php", "inurl:eval.php",
+                        "intext:\"eval(base64_decode\"",
+                        // Consolidated from RCE Parameters
+                        "inurl:id= | inurl:pid= | inurl:category= | inurl:cat= | inurl:action= | inurl:sid= | inurl:dir= inurl:&",
+                        "inurl:cmd | inurl:exec= | inurl:query= | inurl:code= | inurl:do= | inurl:run= | inurl:read= | inurl:ping= inurl:&"
+                    ]
+                },
+                'broken_auth': {
+                    name: 'A02: Broken Authentication',
+                    description: 'Finds login pages, default credentials, password dumps, and session tokens.',
+                    dorks: [
+                        "inurl:login.php", "inurl:admin.php", "inurl:wp-login.php", "intitle:\"admin panel\"",
+                        "intext:\"username\" \"password\" filetype:log", "intext:\"username\" \"password\" filetype:txt",
+                        "intitle:\"index of\" \".htpasswd\"", "intitle:\"index of\" \".htaccess\"",
+                        "filetype:sql \"INSERT INTO users\"", "ext:log \"PHP Fatal error\" password",
+                        // Consolidated from Login Pages
+                        "inurl:login | inurl:signin | intitle:login | intitle:signin | inurl:secure"
+                    ]
+                },
+                'sensitive_data': {
+                    name: 'A03: Sensitive Data Exposure',
+                    description: 'Uncovers exposed sensitive information like API keys, private keys, and sensitive parameters.',
+                    dorks: [
+                        "\"aws_access_key_id\"", "\"private_key\" -github", "\"BEGIN PRIVATE KEY\" -github",
+                        "\"client_secret\"", "\"api_key\" filetype:env", "\"AZURE_CLIENT_SECRET\"",
+                        "intext:\"credit card\" -pdf", "intext:\"ssn\" filetype:txt", "intext:\"CVV\" filetype:log",
+                        "inurl:api/docs", "inurl:swagger.json", "inurl:graphql",
+                        // Consolidated from Sensitive Params
+                        "inurl:email= | inurl:phone= | inurl:name= | inurl:user= inurl:&"
+                    ]
+                },
+                'sensitive_filetypes': {
+                    name: 'Sensitive File Types',
+                    description: 'Finds a wide range of exposed sensitive files, including documents, databases, backups, configs, and keys.',
+                    dorks: [
+                        // --- Documents ---
+                        "filetype:pdf", "filetype:doc", "filetype:docx", "filetype:xls", "filetype:xlsx", "filetype:ppt", "filetype:pptx",
+                        "intitle:\"index of\" filetype:pdf", "intitle:\"index of\" filetype:doc", "intitle:\"index of\" filetype:xls",
+                        // --- Databases ---
+                        "filetype:sql", "filetype:db", "filetype:sqlite", "filetype:accdb", "filetype:mdb",
+                        "inurl:database.sql", "inurl:db.sql", "inurl:backup.sql",
+                        // --- Configuration Files ---
+                        "filetype:env", "filetype:ini", "filetype:conf", "filetype:config", "filetype:cfg",
+                        "inurl:.env", "inurl:config.php", "inurl:configuration.ini", "inurl:web.config",
+                        // --- Backup Archives ---
+                        "filetype:zip", "filetype:rar", "filetype:tar", "filetype:gz", "filetype:7z",
+                        "inurl:backup.zip", "inurl:sitebackup.zip", "inurl:database.zip",
+                        // --- Code & Scripts ---
+                        "filetype:php", "filetype:js", "filetype:py", "filetype:pl", "filetype:sh", "filetype:bat",
+                        "intitle:\"index of\" \".git\"", "intitle:\"index of\" \".svn\"",
+                        // --- Keys, Certificates & Secrets ---
+                        "filetype:key", "filetype:pem", "filetype:p12", "filetype:jks", "filetype:crt", "filetype:p7b",
+                        "inurl:id_rsa", "inurl:id_rsa.pub", "inurl:.ssh/id_rsa",
+                        // --- System Files ---
+                        "filetype:log", "filetype:passwd", "filetype:shadow", "filetype:htpasswd",
+                        // --- Specific Sensitive Filenames ---
+                        "inurl:wp-config.php.bak", "inurl:.htpasswd", "inurl:.htaccess", "inurl:dump.sql",
+                        "inurl:proftpdpasswd", "inurl:vsftpd.conf", "inurl:master.passwd",
+                        // --- Content-Based Searches ---
+                        "intext:\"confidential\"", "intext:\"internal use only\"", "intext:\"do not distribute\"",
+                        "intext:\"company confidential\"", "intext:\"proprietary information\""
+                    ]
+                },
+                'xml_xxe': {
+                    name: 'A04: XML External Entities (XXE)',
+                    description: 'Finds XML file uploads or processing points that could be vulnerable to XXE attacks.',
+                    dorks: [
+                        "inurl:xml.php", "inurl:upload.php filetype:xml", "intitle:\"index of\" filetype:xml",
+                        "intext:\"<!DOCTYPE\"", "inurl:.wsdl"
+                    ]
+                },
+                'access_control': {
+                    name: 'A05: Broken Access Control',
+                    description: 'Discovers directories or files that should be protected but are publicly accessible.',
+                    dorks: [
+                        "intitle:\"index of\" /admin", "intitle:\"index of\" /backup", "intitle:\"index of\" /logs",
+                        "inurl:/wp-admin/", "inurl:/phpmyadmin/", "inurl:/console/",
+                        "intext:\"This is a restricted area\""
+                    ]
+                },
+                'ssrf': {
+                    name: 'A06: Server-Side Request Forgery (SSRF)',
+                    description: 'Locates parameters that accept URLs, which can be abused to make requests on behalf of the server.',
+                    dorks: [
+                        "inurl:\"url=\"", "inurl:\"redirect=\"", "inurl:\"return=\"", "inurl:\"source=\"",
+                        "inurl:\"target=\"", "inurl:\"import=\"", "inurl:\"next=\"", "inurl:\"callback=\"",
+                        "inurl:\"goto=\"", "inurl:\"fetch=\"",
+                        // Consolidated from SSRF Parameters
+                        "inurl:http | inurl:url= | inurl:path= | inurl:dest= | inurl:html= | inurl:data= | inurl:domain= | inurl:page= inurl:&"
+                    ]
+                },
+                'misconfig': {
+                    name: 'A07: Security Misconfiguration',
+                    description: 'Finds exposed configuration files, default pages, test environments, and verbose error messages.',
+                    dorks: [
+                        "intitle:\"index of\" .env", "intitle:\"index of\" .git", "intitle:\"index of\" config.php",
+                        "intitle:\"index of\" .sql", "intitle:\"index of\" .log", "intitle:\"index of\" .bak",
+                        "ext:xml password", "ext:conf password", "ext:ini password",
+                        "intitle:\"Apache2 Ubuntu Default Page\"", "intitle:\"Test Page for the Nginx HTTP Server\"",
+                        // Consolidated from Juicy Extensions
+                        "ext:log | ext:txt | ext:conf | ext:cnf | ext:ini | ext:env | ext:sh | ext:bak | ext:backup | ext:swp | ext:old | ext:~ | ext:git | ext:svn | ext:htpasswd | ext:htaccess | ext:json",
+                        // Consolidated from Test Environments
+                        "inurl:test | inurl:env | inurl:dev | inurl:staging | inurl:sandbox | inurl:debug | inurl:temp | inurl:internal | inurl:demo"
+                    ]
+                },
+                'xss': {
+                    name: 'A08: Cross-Site Scripting (XSS)',
+                    description: 'Identifies search fields or other parameters that might reflect input, leading to XSS.',
+                    dorks: [
+                        "inurl:search=", "inurl:q=", "inurl:query=", "inurl:s=", "inurl:keyword=",
+                        "inurl:find=", "inurl:p=", "inurl:input=", "inurl:view=", "inurl:term=",
+                        "intext:\"<script>alert\"",
+                        // Consolidated from XSS Parameters
+                        "inurl:q= | inurl:s= | inurl:search= | inurl:query= | inurl:keyword= | inurl:lang= inurl:&"
+                    ]
+                },
+                'vuln_components': {
+                    name: 'A09: Vulnerable Components',
+                    description: 'Searches for specific software, versions, libraries, or API docs known to be vulnerable.',
+                    dorks: [
+                        "inurl:\"wp-content/plugins\"", "intext:\"Powered by\" -wordpress", "intext:\"Joomla\"",
+                        "inurl:\"node_modules/\"", "intitle:\"index of\" \"jquery.min.js\"",
+                        "inurl:\"struts2-showcase\"", "inurl:\"/solr/admin\"",
+                        // Consolidated from API Docs
+                        "inurl:apidocs | inurl:api-docs | inurl:swagger | inurl:api-explorer | inurl:redoc | inurl:openapi | intitle:\"Swagger UI\""
+                    ]
+                },
+                'cms_platform': {
+                    name: 'CMS & Platform Detection',
+                    description: 'Finds WordPress, Drupal, and Joomla sites using advanced, high-confidence dorks targeting core files and unique text.',
+                    dorks: [
+                        "inurl:wp-login.php",
+                        "inurl:wp-admin/admin-ajax.php",
+                        "inurl:wp-json",
+                        "inurl:wp-config.php.bak",
+                        "inurl:/wp-content/themes/",
+                        "inurl:/wp-content/plugins/",
+                        "intext:\"Just another WordPress site\"",
+                        "inurl:wp-cron.php?doing_wp_cron",
+                        "inurl:xmlrpc.php",
+                        "inurl:wp-sitemap.xml"
+                    ]
+                },
+                'logs_audit': {
+                    name: 'A10: Logs & Audit Trails',
+                    description: 'Finds exposed log files that might contain sensitive internal information.',
+                    dorks: [
+                        "intitle:\"index of\" error.log", "intitle:\"index of\" access.log",
+                        "filetype:log \"password\"", "filetype:log \"internal\"",
+                        "inurl:logs/", "inurl:/var/log/"
+                    ]
+                },
+                'file_inclusion': {
+                    name: 'File Inclusion (LFI/RFI)',
+                    description: 'Finds scripts that include local or remote files, a common and critical vulnerability.',
+                    dorks: [
+                        "inurl:file=", "inurl:page=", "inurl:include=", "inurl:content=", "inurl:load=",
+                        "inurl:document=", "inurl:path=", "inurl:config=", "inurl:conf=",
+                        "inurl:template=", "inurl:inc=",
+                        // Consolidated from LFI Parameters
+                        "inurl:include | inurl:dir | inurl:detail= | inurl:file= | inurl:folder= | inurl:inc= | inurl:locate= | inurl:doc= | inurl:conf inurl:&"
+                    ]
+                },
+                'open_redirect': {
+                    name: 'Open Redirects',
+                    description: 'Locates parameters used for redirection that can be abused for phishing attacks.',
+                    dorks: [
+                        "inurl:redirect=", "inurl:url=", "inurl:return=", "inurl:returnTo=", "inurl:goto=",
+                        "inurl:next=", "inurl:redirect_uri=", "inurl:continue=", "inurl:link=",
+                        // Consolidated from Open Redirect Parameters
+                        "inurl:url= | inurl:return= | inurl:next= | inurl:redirect= | inurl:redir= | inurl:ret= | inurl:r2= | inurl:page= inurl:& inurl:http"
+                    ]
+                },
+                'backup_files': {
+                    name: 'Backup & Old Files',
+                    description: 'Searches for unsecured backup files that may contain source code or database dumps.',
+                    dorks: [
+                        "intitle:\"index of\" .bak", "intitle:\"index of\" .backup", "intitle:\"index of\" .old",
+                        "intitle:\"index of\" .zip", "intitle:\"index of\" .tar.gz", "intitle:\"index of\" .sql",
+                        "inurl:backup.zip", "inurl:database.sql", "inurl:db.bak"
+                    ]
+                },
+                'iots_cctv': {
+                    name: 'IoT & Exposed Devices',
+                    description: 'Finds publicly accessible web interfaces for cameras, printers, and other IoT devices.',
+                    dorks: [
+                        "inurl:CgiStart?page=", "inurl:/view/index.shtml", "inurl:ViewerFrame?Mode=",
+                        "intitle:\"live view\" -axis", "intitle:\"ip camera\"", "inurl:printer/main.html",
+                        "inurl:\"home.htm\""
+                    ]
+                },
+                'file_upload': {
+                    name: 'File Upload Endpoints',
+                    description: 'Finds pages with file upload functionality, which can be a critical vulnerability.',
+                    dorks: [
+                        "intext:\"choose file\" | intext:\"select file\" | intext:\"upload PDF\""
+                    ]
+                },
+                'parameter_fuzzing': {
+                    name: 'Parameters for Fuzzing',
+                    description: 'Finds pages with URL parameters that are prime candidates for fuzzing to discover vulnerabilities like XSS, SQLi, and IDORs.',
+                    dorks: [
+                        "inurl:&", // Finds pages with multiple parameters
+                        "inurl:id=", "inurl:pid=", "inurl:uid=", "inurl:page=", "inurl:cat=", "inurl:category=",
+                        "inurl:article=", "inurl:product=", "inurl:item=", "inurl:file=", "inurl:doc=",
+                        "inurl:user=", "inurl:profile=", "inurl:msg=", "inurl:message=", "inurl:topic=",
+                        "inurl:search=", "inurl:query=", "inurl:q=", "inurl:keyword=", "inurl:s=",
+                        "inurl:action=", "inurl:do=", "inurl:exec=", "inurl:run=", "inurl:cmd=",
+                        "inurl:redirect=", "inurl:url=", "inurl:return=", "inurl:next=", "inurl:goto=",
+                        "inurl:lang=", "inurl:load=", "inurl:view=", "inurl:dir=", "inurl:folder=",
+                        "inurl:sub=", "inurl:func=", "inurl:module=", "inurl:state=", "inurl:token="
+                    ]
+                },
+                'high_value_inurl': {
+                    name: 'High Value inurl Keywords',
+                    description: 'Searches for high-value keywords in URLs that often lead to sensitive directories or functionality.',
+                    dorks: [
+                        "inurl:conf | inurl:env | inurl:cgi | inurl:bin | inurl:etc | inurl:root | inurl:sql | inurl:backup | inurl:admin | inurl:php"
+                    ]
+                },
+                'server_errors': {
+                    name: 'Server Errors',
+                    description: 'Finds pages that leak information through server-side errors, exceptions, or stack traces.',
+                    dorks: [
+                        "inurl:\"error\" | intitle:\"exception\" | intitle:\"failure\" | intitle:\"server at\" | inurl:exception | \"database error\" | \"SQL syntax\" | \"undefined index\" | \"unhandled exception\" | \"stack trace\""
+                    ]
+                },
+                'aem': {
+                    name: 'Adobe Experience Manager (AEM)',
+                    description: 'Finds AEM-specific paths and endpoints that may be exposed.',
+                    dorks: [
+                        "inurl:/content/usergenerated | inurl:/content/dam | inurl:/jcr:content | inurl:/libs/granite | inurl:/etc/clientlibs | inurl:/content/geometrixx | inurl:/bin/wcm | inurl:/crx/de"
+                    ]
+                },
+                'disclosed_vulns': {
+                    name: 'Disclosed Vulnerabilities',
+                    description: 'Searches for disclosed vulnerabilities on platforms like Open Bug Bounty. NOTE: Replace "example.com" in the generated dork.',
+                    dorks: [
+                        "site:openbugbounty.org inurl:reports intext:\"example.com\""
+                    ]
+                },
+                'code_leaks': {
+                    name: 'Code Leaks',
+                    description: 'Searches for leaked code snippets on platforms like Pastebin or JSFiddle. NOTE: Replace "example.com" in the generated dork.',
+                    dorks: [
+                        "site:pastebin.com \"example.com\"", "site:jsfiddle.net \"example.com\"",
+                        "site:codebeautify.org \"example.com\"", "site:codepen.io \"example.com\""
+                    ]
+                },
+                'cloud_storage': {
+                    name: 'Cloud Storage',
+                    description: 'Finds exposed files or buckets on various cloud storage platforms. NOTE: Replace "example.com" in the generated dork.',
+                    dorks: [
+                        "site:s3.amazonaws.com \"example.com\"", "site:blob.core.windows.net \"example.com\"",
+                        "site:googleapis.com \"example.com\"", "site:drive.google.com \"example.com\"",
+                        "site:dev.azure.com \"example.com\"", "site:onedrive.live.com \"example.com\"",
+                        "site:digitaloceanspaces.com \"example.com\"", "site:sharepoint.com \"example.com\"",
+                        "site:s3-external-1.amazonaws.com \"example.com\"", "site:s3.dualstack.us-east-1.amazonaws.com \"example.com\"",
+                        "site:dropbox.com/s \"example.com\"", "site:docs.google.com inurl:\"/d/\" \"example.com\""
+                    ]
+                },
+                'jfrog_artifactory': {
+                    name: 'JFrog Artifactory',
+                    description: 'Finds exposed JFrog Artifactory instances. NOTE: Replace "example.com" in the generated dork.',
+                    dorks: [
+                        "site:jfrog.io \"example.com\""
+                    ]
+                },
+                'firebase': {
+                    name: 'Firebase',
+                    description: 'Finds exposed Firebase databases. NOTE: Replace "example.com" in the generated dork.',
+                    dorks: [
+                        "site:firebaseio.com \"example.com\""
+                    ]
+                },
+                'general_recon': {
+                    name: 'General Recon (No Domain)',
+                    description: 'General reconnaissance dorks that work best without a target domain. Leave the domain field empty.',
+                    dorks: [
+                        "\"submit vulnerability report\" | \"powered by bugcrowd\" | \"powered by hackerone\"",
+                        "site:*/security.txt \"bounty\"", "site:*/server-status apache"
+                    ]
+                }
+            };
+            
+            let currentResults = [];
+
+            // --- LocalStorage Management ---
+            const storage = {
+                get: (key) => JSON.parse(localStorage.getItem(key)) || [],
+                set: (key, value) => localStorage.setItem(key, JSON.stringify(value)),
+            };
+
+            // --- Initialize Dropdown ---
+            function initializeDropdown() {
+                const sortedKeys = Object.keys(dorkCategories).sort((a, b) => {
+                    const nameA = dorkCategories[a].name.toUpperCase();
+                    const nameB = dorkCategories[b].name.toUpperCase();
+                    if (nameA < nameB) return -1;
+                    if (nameA > nameB) return 1;
+                    return 0;
+                });
+
+                sortedKeys.forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = dorkCategories[key].name;
+                    dorkTypeSelect.appendChild(option);
+                });
+                
+                updateCategoryDescription();
+            }
+
+            function updateCategoryDescription() {
+                const selectedKey = dorkTypeSelect.value;
+                categoryDescriptionP.textContent = dorkCategories[selectedKey].description;
+            }
+
+            dorkTypeSelect.addEventListener('change', updateCategoryDescription);
+
+            // --- Tab Switching ---
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.dataset.tab;
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    button.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+
+            // --- Form Submission Handlers ---
+            presetForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const type = dorkTypeSelect.value;
+                const domain = document.getElementById('target-domain').value.trim();
+                const query = document.getElementById('dork-query').value.trim();
+                const dorksToUse = dorkCategories[type].dorks;
+                const searchQuery = { type, domain, query };
+                generateDorks(dorksToUse, searchQuery);
+                addToHistory(searchQuery);
+            });
+
+            builderForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const operator = document.getElementById('builder-operator').value;
+                const value = document.getElementById('builder-value').value.trim();
+                const domain = document.getElementById('builder-domain').value.trim();
+                const extra = document.getElementById('builder-extra').value.trim();
+                
+                if (!operator && !value && !domain && !extra) {
+                    alert('Please fill in at least one field to build a dork.');
+                    return;
+                }
+                
+                const customDork = `${operator}${value}`.trim();
+                const searchQuery = { customDork, domain, extra };
+                generateDorks([customDork], searchQuery);
+                addToHistory(searchQuery);
+            });
+
+            // --- Core Dork Generation Logic ---
+            function generateDorks(dorksToUse, queryDetails) {
+                resultsContainer.innerHTML = '';
+                currentResults = [];
+                const { domain, query, customDork, extra } = queryDetails;
+
+                const dorkList = customDork ? [customDork] : dorksToUse;
+
+                dorkList.forEach(dork => {
+                    const siteQuery = domain ? `site:${domain}` : '';
+                    const fullQuery = [dork, siteQuery, query, extra].filter(Boolean).join(' ');
+                    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(fullQuery)}`;
+                    
+                    currentResults.push({ dork: fullQuery, url: searchUrl });
+
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    resultItem.innerHTML = `
+                        <div class="result-dork">${fullQuery}</div>
+                        <div class="result-actions">
+                            <button class="btn-primary" onclick="window.open('${searchUrl}', '_blank')">Search on Google</button>
+                            <button class="btn-secondary" onclick="navigator.clipboard.writeText('${fullQuery}')">Copy Dork</button>
+                            <button class="btn-warning" onclick="addToFavorites('${fullQuery}')">⭐ Favorite</button>
+                        </div>
+                    `;
+                    resultsContainer.appendChild(resultItem);
+                });
+
+                exportMdBtn.classList.remove('hidden');
+                resultsContainer.parentElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            
+            // --- History & Favorites Logic ---
+            function addToHistory(query) {
+                const history = storage.get('dorkHistory');
+                const newEntry = { ...query, timestamp: new Date().toISOString() };
+                history.unshift(newEntry);
+                storage.set('dorkHistory', history.slice(0, 20));
+                renderHistory();
+            }
+
+            function renderHistory() {
+                const history = storage.get('dorkHistory');
+                historyList.innerHTML = '';
+                if (history.length === 0) {
+                    historyList.innerHTML = '<li style="color: var(--text-secondary);">No history yet.</li>';
+                    return;
+                }
+                history.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    const queryText = item.type ? `Preset: ${dorkCategories[item.type].name}` : `Custom: ${item.customDork}`;
+                    li.innerHTML = `
+                        <span class="query-text" title="${queryText}">${queryText}</span>
+                        <button class="remove-btn" onclick="removeFromHistory(${index})">X</button>
+                    `;
+                    li.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('remove-btn')) {
+                            repopulateForm(item);
+                        }
+                    });
+                    historyList.appendChild(li);
+                });
+            }
+
+            function removeFromHistory(index) {
+                let history = storage.get('dorkHistory');
+                history.splice(index, 1);
+                storage.set('dorkHistory', history);
+                renderHistory();
+            }
+            
+            function repopulateForm(query) {
+                const targetTab = query.type ? 'preset' : 'builder';
+                document.querySelector(`.tab-button[data-tab="${targetTab}"]`).click();
+                
+                if (query.type) {
+                    document.getElementById('dork-type').value = query.type;
+                    updateCategoryDescription();
+                    document.getElementById('target-domain').value = query.domain || '';
+                    document.getElementById('dork-query').value = query.query || '';
+                } else {
+                    document.getElementById('builder-operator').value = query.customDork.split(':')[0] + ':' || '';
+                    document.getElementById('builder-value').value = query.customDork.split(':').slice(1).join(':') || '';
+                    document.getElementById('builder-domain').value = query.domain || '';
+                    document.getElementById('builder-extra').value = query.extra || '';
+                }
+            }
+
+            function addToFavorites(dork) {
+                const favorites = storage.get('dorkFavorites');
+                if (!favorites.includes(dork)) {
+                    favorites.push(dork);
+                    storage.set('dorkFavorites', favorites);
+                    renderFavorites();
+                } else {
+                    alert('This dork is already in your favorites.');
+                }
+            }
+
+            function renderFavorites() {
+                const favorites = storage.get('dorkFavorites');
+                favoritesList.innerHTML = '';
+                if (favorites.length === 0) {
+                    favoritesList.innerHTML = '<li style="color: var(--text-secondary);">No favorites yet.</li>';
+                    return;
+                }
+                favorites.forEach((dork, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span class="query-text" title="${dork}">${dork}</span>
+                        <button class="remove-btn" onclick="removeFromFavorites(${index})">X</button>
+                    `;
+                    li.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('remove-btn')) {
+                            generateDorks([dork], {});
+                        }
+                    });
+                    favoritesList.appendChild(li);
+                });
+            }
+
+            function removeFromFavorites(index) {
+                let favorites = storage.get('dorkFavorites');
+                favorites.splice(index, 1);
+                storage.set('dorkFavorites', favorites);
+                renderFavorites();
+            }
+
+            // --- Export Logic ---
+            exportMdBtn.addEventListener('click', () => {
+                if (currentResults.length === 0) return;
+                let markdown = '# Google Dork Results\n\n';
+                markdown += `Generated on: ${new Date().toLocaleString()}\n\n---\n\n`;
+                currentResults.forEach(res => {
+                    markdown += `**Dork:** \`${res.dork}\`\n`;
+                    markdown += `**Link:** [Search on Google](${res.url})\n\n---\n\n`;
+                });
+                const blob = new Blob([markdown], { type: 'text/markdown' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `dork_results_${Date.now()}.md`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            // --- Clear History Logic ---
+            clearHistoryBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear all search history? This action cannot be undone.')) {
+                    storage.set('dorkHistory', []);
+                    renderHistory();
+                }
+            });
+
+            // --- Initial Render ---
+            initializeDropdown();
+            renderHistory();
+            renderFavorites();
+        });
+    </script>
+</body>
+</html>
